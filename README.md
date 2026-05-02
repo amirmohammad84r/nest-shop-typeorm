@@ -18,11 +18,6 @@ npm run start:dev  # dev watch on http://localhost:3000
 - Set `JWT_SECRET` in env for real usage (defaults to `change-this-secret`).
 - Uses SQLite at `backend/prisma/dev.db`.
 
-## Frontend – run
-
-- Open `frontend/index.html` directly in browser, or serve statically (e.g. `npx http-server frontend`).
-- In the page, set API base (default `http://localhost:3000`), register/login to get a token, then call CRUD sections. Token is stored in `localStorage`.
-
 ## Auth & roles
 
 - Endpoints expect `Authorization: Bearer <token>`.
