@@ -29,6 +29,9 @@ export class Product extends BaseEntity {
   @CreateDateColumn()
   createdAt: Date;
 
+  @Column('text', { array: true })
+  imgs: string[];
+
   @ManyToOne(() => Category, (C) => C.product, { nullable: true })
   @JoinColumn({ name: 'categoryId' })
   category: Category;

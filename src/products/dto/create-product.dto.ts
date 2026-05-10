@@ -1,5 +1,6 @@
 import { IsString, MinLength, IsNumber, Min, IsOptional, IsUUID } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 export class CreateProductDto {
   @ApiProperty({
@@ -16,6 +17,7 @@ export class CreateProductDto {
   })
   @IsNumber({ maxDecimalPlaces: 2 }, { message: 'Price must be a valid number with max 2 decimal places' })
   @Min(0.01, { message: 'Price must be greater than 0' })
+  @Type(() => Number)
   price: number;
 
   @ApiProperty({
@@ -24,6 +26,7 @@ export class CreateProductDto {
   })
   @IsNumber({}, { message: 'Stock must be a valid number' })
   @Min(0, { message: 'Stock cannot be negative' })
+  @Type(() => Number)
   stock: number;
 
   @ApiPropertyOptional({
@@ -33,4 +36,12 @@ export class CreateProductDto {
   @IsOptional()
   @IsString()
   categoryId?: string;
+
+
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+  })
+  @IsOptional()
+  image: any;
 }

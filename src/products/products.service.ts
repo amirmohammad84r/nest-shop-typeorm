@@ -9,12 +9,13 @@ import { ProductRepository } from './repositories/productRepository';
 export class ProductsService {
   constructor(private readonly proRepo: ProductRepository) { }
 
-  async createProduct(createProductDto: CreateProductDto) {
+  async createProduct(createProductDto: CreateProductDto, file) {
     const product = await this.proRepo.create({
       title: createProductDto.title,
       price: createProductDto.price,
       stock: createProductDto.stock,
       category: { id: createProductDto.categoryId },
+      imgs: file.path
     });
     await product.save();
 

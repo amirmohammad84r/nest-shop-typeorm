@@ -3,6 +3,9 @@
 /node_modules
 /build
 
+#test
+/k6
+
 # Logs
 *.log
 npm-debug.log*
@@ -53,3 +56,9 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+#db
+*.db
+
+#uploads
+uploads

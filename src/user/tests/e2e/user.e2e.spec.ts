@@ -1,13 +1,8 @@
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from 'src/app.module';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { APP_GUARD } from '@nestjs/core';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { UserRepository } from 'src/user/repositories/userRepository';
 import { UpdateUserDto } from 'src/user/dto/update-user.dto';
-import Redis from 'ioredis';
-import { RedisService } from 'src/redis/redis.service';
 const request = require('supertest');
 
 
