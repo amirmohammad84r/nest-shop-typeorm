@@ -23,7 +23,7 @@ export class Comments extends BaseEntity {
   @Column()
   userId: string;
 
-  @CreateDateColumn({ type: 'datetime' })
+  @CreateDateColumn()
   createdAt: Date;
 
   @Column({ type: 'int' })

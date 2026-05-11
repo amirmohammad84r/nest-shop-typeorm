@@ -19,7 +19,7 @@ export class Order extends BaseEntity {
   @Column()
   userId: string;
 
-  @CreateDateColumn({ type: 'datetime' })
+  @CreateDateColumn()
   createdAt: Date;
 
   @Column({ type: 'text', default: 'PENDING' })
@@ -35,6 +35,6 @@ export class Order extends BaseEntity {
   @OneToMany(() => OrderItems, (item) => item.order)
   orderItems: OrderItems[];
 
-    @OneToMany(() => Payments, payment => payment.order, { nullable: true })
-    payment: Payments[];
+  @OneToMany(() => Payments, payment => payment.order, { nullable: true })
+  payment: Payments[];
 }

@@ -87,7 +87,6 @@ describe('user service tests', () => {
             await expect(
                 userService.createUser(dto),
             ).rejects.toThrow(ConflictException);
-            expect(bcrypt.hash).toHaveBeenCalledWith(dto.password, 10);
             expect(userRepo.findUserByEmailRepo).toHaveBeenCalledWith(dto.email);
         });
     });

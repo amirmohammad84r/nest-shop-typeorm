@@ -28,7 +28,7 @@ describe('User E2E', () => {
             const res = await request(app.getHttpServer())
                 .post('/users')
                 .send(dto)
-                .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNjk2ZDIwOS02N2JiLTQ4NzItOGNiOS0xMjE5MTQzOWM3OTIiLCJyb2xlIjpudWxsLCJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE3Nzc3MDEzNDcsImV4cCI6MTc3ODMwNjE0N30.6riaoFr67M-RcVSWR7jJWfb82yskZEKc6modRnIEWWI`)
+                .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ODk5NjFlOS1iOThjLTRjZTMtOTlmMi1hMjYzMGRkZDllYjYiLCJyb2xlIjp7ImlkIjoiODY3ZDk0YmUtY2M2My00YzU2LTg5YWQtNTVhZmZiYzU0MjM5IiwidHlwZSI6InVzZXIiLCJ0aXRsZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI2LTA1LTExVDA4OjA5OjA4LjE5OFoiLCJ1cGRhdGVkQXQiOiIyMDI2LTA1LTExVDA4OjA5OjA4LjE5OFoifSwiZW1haWwiOiJqb2huQGV4YW1wbGUuY29tIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNzc4NDk5NzQ4LCJleHAiOjE3NzkxMDQ1NDh9.QNFiFmrhmf3xFsaGqTko3H0U6U95oTXNixSQ-6sGQW0`)
                 .expect(201);
             expect(res.body).toBeDefined();
         })
@@ -36,7 +36,7 @@ describe('User E2E', () => {
         it('get users', async () => {
             const res = await request(app.getHttpServer())
                 .get('/users')
-                .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNjk2ZDIwOS02N2JiLTQ4NzItOGNiOS0xMjE5MTQzOWM3OTIiLCJyb2xlIjpudWxsLCJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE3Nzc3MDEzNDcsImV4cCI6MTc3ODMwNjE0N30.6riaoFr67M-RcVSWR7jJWfb82yskZEKc6modRnIEWWI`)
+                .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ODk5NjFlOS1iOThjLTRjZTMtOTlmMi1hMjYzMGRkZDllYjYiLCJyb2xlIjp7ImlkIjoiODY3ZDk0YmUtY2M2My00YzU2LTg5YWQtNTVhZmZiYzU0MjM5IiwidHlwZSI6InVzZXIiLCJ0aXRsZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI2LTA1LTExVDA4OjA5OjA4LjE5OFoiLCJ1cGRhdGVkQXQiOiIyMDI2LTA1LTExVDA4OjA5OjA4LjE5OFoifSwiZW1haWwiOiJqb2huQGV4YW1wbGUuY29tIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNzc4NDk5NzQ4LCJleHAiOjE3NzkxMDQ1NDh9.QNFiFmrhmf3xFsaGqTko3H0U6U95oTXNixSQ-6sGQW0`)
                 .expect(200);
             expect(res.body).toBeDefined();
         })
@@ -50,14 +50,14 @@ describe('User E2E', () => {
             const res1 = await request(app.getHttpServer())
                 .post('/users')
                 .send(dto)
-                .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNjk2ZDIwOS02N2JiLTQ4NzItOGNiOS0xMjE5MTQzOWM3OTIiLCJyb2xlIjpudWxsLCJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE3Nzc3MDEzNDcsImV4cCI6MTc3ODMwNjE0N30.6riaoFr67M-RcVSWR7jJWfb82yskZEKc6modRnIEWWI`)
+                .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ODk5NjFlOS1iOThjLTRjZTMtOTlmMi1hMjYzMGRkZDllYjYiLCJyb2xlIjp7ImlkIjoiODY3ZDk0YmUtY2M2My00YzU2LTg5YWQtNTVhZmZiYzU0MjM5IiwidHlwZSI6InVzZXIiLCJ0aXRsZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI2LTA1LTExVDA4OjA5OjA4LjE5OFoiLCJ1cGRhdGVkQXQiOiIyMDI2LTA1LTExVDA4OjA5OjA4LjE5OFoifSwiZW1haWwiOiJqb2huQGV4YW1wbGUuY29tIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNzc4NDk5NzQ4LCJleHAiOjE3NzkxMDQ1NDh9.QNFiFmrhmf3xFsaGqTko3H0U6U95oTXNixSQ-6sGQW0`)
                 .expect(201);
 
             const id = res1.body.user.id
 
             const res = await request(app.getHttpServer())
                 .get(`/users/${id}`)
-                .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNjk2ZDIwOS02N2JiLTQ4NzItOGNiOS0xMjE5MTQzOWM3OTIiLCJyb2xlIjpudWxsLCJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE3Nzc3MDEzNDcsImV4cCI6MTc3ODMwNjE0N30.6riaoFr67M-RcVSWR7jJWfb82yskZEKc6modRnIEWWI`)
+                .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ODk5NjFlOS1iOThjLTRjZTMtOTlmMi1hMjYzMGRkZDllYjYiLCJyb2xlIjp7ImlkIjoiODY3ZDk0YmUtY2M2My00YzU2LTg5YWQtNTVhZmZiYzU0MjM5IiwidHlwZSI6InVzZXIiLCJ0aXRsZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI2LTA1LTExVDA4OjA5OjA4LjE5OFoiLCJ1cGRhdGVkQXQiOiIyMDI2LTA1LTExVDA4OjA5OjA4LjE5OFoifSwiZW1haWwiOiJqb2huQGV4YW1wbGUuY29tIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNzc4NDk5NzQ4LCJleHAiOjE3NzkxMDQ1NDh9.QNFiFmrhmf3xFsaGqTko3H0U6U95oTXNixSQ-6sGQW0`)
                 .expect(200);
             console.error(res.body)
             expect(res.body).toBeDefined();
@@ -72,7 +72,7 @@ describe('User E2E', () => {
             const res1 = await request(app.getHttpServer())
                 .post('/users')
                 .send(dto)
-                .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNjk2ZDIwOS02N2JiLTQ4NzItOGNiOS0xMjE5MTQzOWM3OTIiLCJyb2xlIjpudWxsLCJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE3Nzc3MDEzNDcsImV4cCI6MTc3ODMwNjE0N30.6riaoFr67M-RcVSWR7jJWfb82yskZEKc6modRnIEWWI`)
+                .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ODk5NjFlOS1iOThjLTRjZTMtOTlmMi1hMjYzMGRkZDllYjYiLCJyb2xlIjp7ImlkIjoiODY3ZDk0YmUtY2M2My00YzU2LTg5YWQtNTVhZmZiYzU0MjM5IiwidHlwZSI6InVzZXIiLCJ0aXRsZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI2LTA1LTExVDA4OjA5OjA4LjE5OFoiLCJ1cGRhdGVkQXQiOiIyMDI2LTA1LTExVDA4OjA5OjA4LjE5OFoifSwiZW1haWwiOiJqb2huQGV4YW1wbGUuY29tIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNzc4NDk5NzQ4LCJleHAiOjE3NzkxMDQ1NDh9.QNFiFmrhmf3xFsaGqTko3H0U6U95oTXNixSQ-6sGQW0`)
                 .expect(201);
             const id = res1.body.user.id
 
@@ -84,7 +84,7 @@ describe('User E2E', () => {
             const res = await request(app.getHttpServer())
                 .put(`/users/${id}`)
                 .send(udto)
-                .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNjk2ZDIwOS02N2JiLTQ4NzItOGNiOS0xMjE5MTQzOWM3OTIiLCJyb2xlIjpudWxsLCJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE3Nzc3MDEzNDcsImV4cCI6MTc3ODMwNjE0N30.6riaoFr67M-RcVSWR7jJWfb82yskZEKc6modRnIEWWI`)
+                .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ODk5NjFlOS1iOThjLTRjZTMtOTlmMi1hMjYzMGRkZDllYjYiLCJyb2xlIjp7ImlkIjoiODY3ZDk0YmUtY2M2My00YzU2LTg5YWQtNTVhZmZiYzU0MjM5IiwidHlwZSI6InVzZXIiLCJ0aXRsZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI2LTA1LTExVDA4OjA5OjA4LjE5OFoiLCJ1cGRhdGVkQXQiOiIyMDI2LTA1LTExVDA4OjA5OjA4LjE5OFoifSwiZW1haWwiOiJqb2huQGV4YW1wbGUuY29tIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNzc4NDk5NzQ4LCJleHAiOjE3NzkxMDQ1NDh9.QNFiFmrhmf3xFsaGqTko3H0U6U95oTXNixSQ-6sGQW0`)
                 .expect(200);
             expect(res.body).toBeDefined();
         })
@@ -98,14 +98,14 @@ describe('User E2E', () => {
             const res1 = await request(app.getHttpServer())
                 .post('/users')
                 .send(dto)
-                .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNjk2ZDIwOS02N2JiLTQ4NzItOGNiOS0xMjE5MTQzOWM3OTIiLCJyb2xlIjpudWxsLCJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE3Nzc3MDEzNDcsImV4cCI6MTc3ODMwNjE0N30.6riaoFr67M-RcVSWR7jJWfb82yskZEKc6modRnIEWWI`)
+                .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ODk5NjFlOS1iOThjLTRjZTMtOTlmMi1hMjYzMGRkZDllYjYiLCJyb2xlIjp7ImlkIjoiODY3ZDk0YmUtY2M2My00YzU2LTg5YWQtNTVhZmZiYzU0MjM5IiwidHlwZSI6InVzZXIiLCJ0aXRsZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI2LTA1LTExVDA4OjA5OjA4LjE5OFoiLCJ1cGRhdGVkQXQiOiIyMDI2LTA1LTExVDA4OjA5OjA4LjE5OFoifSwiZW1haWwiOiJqb2huQGV4YW1wbGUuY29tIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNzc4NDk5NzQ4LCJleHAiOjE3NzkxMDQ1NDh9.QNFiFmrhmf3xFsaGqTko3H0U6U95oTXNixSQ-6sGQW0`)
                 .expect(201);
             const id = res1.body.user.id
 
 
             const res = await request(app.getHttpServer())
                 .delete(`/users/${id}`)
-                .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNjk2ZDIwOS02N2JiLTQ4NzItOGNiOS0xMjE5MTQzOWM3OTIiLCJyb2xlIjpudWxsLCJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE3Nzc3MDEzNDcsImV4cCI6MTc3ODMwNjE0N30.6riaoFr67M-RcVSWR7jJWfb82yskZEKc6modRnIEWWI`)
+                .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ODk5NjFlOS1iOThjLTRjZTMtOTlmMi1hMjYzMGRkZDllYjYiLCJyb2xlIjp7ImlkIjoiODY3ZDk0YmUtY2M2My00YzU2LTg5YWQtNTVhZmZiYzU0MjM5IiwidHlwZSI6InVzZXIiLCJ0aXRsZSI6InVzZXIiLCJjcmVhdGVkQXQiOiIyMDI2LTA1LTExVDA4OjA5OjA4LjE5OFoiLCJ1cGRhdGVkQXQiOiIyMDI2LTA1LTExVDA4OjA5OjA4LjE5OFoifSwiZW1haWwiOiJqb2huQGV4YW1wbGUuY29tIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNzc4NDk5NzQ4LCJleHAiOjE3NzkxMDQ1NDh9.QNFiFmrhmf3xFsaGqTko3H0U6U95oTXNixSQ-6sGQW0`)
                 .expect(200);
             expect(res.body).toBeDefined();
         });

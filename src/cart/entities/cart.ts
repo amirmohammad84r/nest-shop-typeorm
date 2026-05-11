@@ -18,7 +18,7 @@ export class Carts extends BaseEntity {
   @Column({ unique: true })
   userId: string;
 
-  @CreateDateColumn({ type: 'datetime' })
+  @CreateDateColumn()
   createdAt: Date;
 
   // Relations

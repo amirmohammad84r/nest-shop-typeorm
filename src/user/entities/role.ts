@@ -20,6 +20,7 @@ export enum roles {
     ADMIN = 'admin',
     MANAGER = 'manager',
     WAREHOUSE = 'warehouse',
+    USERPRO = 'userpro'
 }
 
 @Entity('role')

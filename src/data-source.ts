@@ -14,15 +14,21 @@ import { Permitions } from './user/entities/permitions';
 import { RolesTable } from './user/entities/role';
 import { Logs } from './logs/entities/logTable';
 
-
 const isTest = process.env.NODE_ENV === 'test';
 
 export const AppDataSource = new DataSource({
-  type: 'sqlite',
+  type: isTest ? 'sqlite' : 'postgres',
 
+  // ===== TEST (SQLite in-memory) =====
   database: isTest
     ? ':memory:'
-    : process.env?.REAL_DATABASE || './dev.db',
+    : process.env.DB_NAME || 'shopdb',
+
+  // ===== POSTGRES CONFIG =====
+  host: isTest ? undefined : process.env.DB_HOST || 'localhost',
+  port: isTest ? undefined : Number(process.env.DB_PORT) || 5432,
+  username: isTest ? undefined : process.env.DB_USER || 'postgres',
+  password: isTest ? undefined : process.env.DB_PASS || '1234',
 
   synchronize: true,
   logging: !isTest,
@@ -43,6 +49,6 @@ export const AppDataSource = new DataSource({
     Payments,
     Permitions,
     RolesTable,
-    Logs
+    Logs,
   ],
 });

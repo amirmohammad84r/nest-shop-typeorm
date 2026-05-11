@@ -7,7 +7,6 @@ import {
   BaseEntity,
   CreateDateColumn,
 } from 'typeorm';
-import { User } from 'src/user/entities/user';
 
 @Entity('coupons')
 export class Coupons extends BaseEntity {
@@ -17,7 +16,7 @@ export class Coupons extends BaseEntity {
   @Column({ unique: true })
   code: string;
 
-  @Column({ type: 'datetime' })
+  @Column()
   expiresAt: Date;
 
   @Column({ type: 'float' })
