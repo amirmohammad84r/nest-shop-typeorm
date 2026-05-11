@@ -25,9 +25,7 @@ export class AuthService {
   async register(createUserDto: CreateUserDto) {
     const { email, password, name } = createUserDto;
 
-
     const existingUser = await this.userRepo.findUserByEmailRepo(email);
-
     if (existingUser) {
       return { message: "email already exist" };
     }

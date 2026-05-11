@@ -10,7 +10,7 @@ export class UserRepository extends Repository<User> {
   }
 
   async findAllUsersRepo() {
-    return this.find();
+    return await this.find({ relations: ['role'] });
   }
 
   async findUserByIdRepo(id: string) {

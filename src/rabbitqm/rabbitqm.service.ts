@@ -1,12 +1,13 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { BadRequestException, Injectable, OnModuleInit } from '@nestjs/common';
 import amqp from 'amqplib';
 import * as bcrypt from 'bcryptjs';
 import { RedisService } from 'src/redis/redis.service';
+import { RoleRepository } from 'src/user/repositories/roleRepository';
 import { UserRepository } from 'src/user/repositories/userRepository';
 
 @Injectable()
 export class RabbitmqService implements OnModuleInit {
-    constructor(private readonly userRepo: UserRepository,
+    constructor(private readonly userRepo: UserRepository, private readonly roleRepo: RoleRepository,
         private readonly redis: RedisService,) { }
 
     private channel: amqp.Channel;
@@ -67,12 +68,21 @@ export class RabbitmqService implements OnModuleInit {
                         return;
                     }
 
+                    let userRole = await this.roleRepo.findOneBy({ title: 'user' })
+                    if (!userRole) {
+                        userRole = await this.roleRepo.create({ title: "user" }).save()
+                    }
+                    if (!userRole) {
+                        throw new BadRequestException("sorry try again")
+                    }
+
                     const hashedPassword = await bcrypt.hash(password, 10);
 
                     await this.userRepo.create({
                         email,
                         name,
                         password: hashedPassword,
+                        role: userRole
                     }).save();
 
                     channel.ack(msg);
