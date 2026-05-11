@@ -30,7 +30,7 @@ export class AdminService {
   ) { }
 
   async changeRoleOfUser(uesrid: string, roleid: CreatePermitionDto) {
-    const role = await this.roleRepo.findRoleById(roleid.title)
+    const role = await this.roleRepo.findByTitle(roleid.title)
     if (!role) {
       throw new NotFoundException('role not found');
     }
@@ -56,7 +56,7 @@ export class AdminService {
   async createRole(roleDTO: CreatePermitionDto) {
     const role = await this.roleRepo.findByTitle(roleDTO.title)
     if (role) throw new ConflictException('role already exist')
-    const roleCreated = await this.roleRepo.create({ title: roleDTO.title }).save()
+    const roleCreated = await this.roleRepo.create({ type: roleDTO.type, title: roleDTO.title }).save()
     console.log(roleCreated)
     return roleCreated
   }

@@ -13,6 +13,7 @@ export class RoleRepository extends Repository<RolesTable> {
     async findRoleById(id: string) {
         return await this.findOne({ where: { id }, relations: ['permitions'] })
     }
+
     async findByTitle(title: string) {
         return await this.findOneBy({ title })
     }

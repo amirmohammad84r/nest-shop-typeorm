@@ -27,7 +27,10 @@ export class RolesTable extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ unique: true, type: 'text', default: roles.USER })
+    @Column({ type: 'text', default: roles.USER })
+    type: roles;
+
+    @Column({ unique: true, type: 'text' })
     title: string;
 
     @CreateDateColumn()
