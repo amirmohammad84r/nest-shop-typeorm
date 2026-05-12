@@ -13,42 +13,47 @@ import { Payments } from './payments/entities/payment';
 import { Permitions } from './user/entities/permitions';
 import { RolesTable } from './user/entities/role';
 import { Logs } from './logs/entities/logTable';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const isTest = process.env.NODE_ENV === 'test';
+process.env.DB_TYPE = isTest ? 'sqlite' : 'postgres'
+console.error(process.env.NODE_ENV)
 
-export const AppDataSource = new DataSource({
-  type: isTest ? 'sqlite' : 'postgres',
+export const AppDataSource = new DataSource(
+  {
+    type: process.env.DB_TYPE as any,
 
-  // ===== TEST (SQLite in-memory) =====
-  database: isTest
-    ? ':memory:'
-    : process.env.DB_NAME || 'shopdb',
+    database: isTest
+      ? ':memory:'
+      : process.env.DB_NAME,
 
-  // ===== POSTGRES CONFIG =====
-  host: isTest ? undefined : process.env.DB_HOST || 'localhost',
-  port: isTest ? undefined : Number(process.env.DB_PORT) || 5432,
-  username: isTest ? undefined : process.env.DB_USER || 'postgres',
-  password: isTest ? undefined : process.env.DB_PASS || '1234',
+    host: isTest ? undefined : process.env.DB_HOST,
+    port: isTest ? undefined : Number(process.env.DB_PORT),
 
-  synchronize: true,
-  logging: !isTest,
+    username: isTest ? undefined : process.env.DB_USER,
+    password: isTest ? undefined : process.env.DB_PASS,
 
-  dropSchema: isTest,
+    synchronize: true,
+    logging: !isTest,
 
-  entities: [
-    Category,
-    Product,
-    User,
-    Order,
-    OrderItems,
-    Coupons,
-    Addresses,
-    Comments,
-    Carts,
-    Cart_Items,
-    Payments,
-    Permitions,
-    RolesTable,
-    Logs,
-  ],
-});
+    dropSchema: isTest,
+
+    entities: [
+      Category,
+      Product,
+      User,
+      Order,
+      OrderItems,
+      Coupons,
+      Addresses,
+      Comments,
+      Carts,
+      Cart_Items,
+      Payments,
+      Permitions,
+      RolesTable,
+      Logs,
+    ],
+
+  });
