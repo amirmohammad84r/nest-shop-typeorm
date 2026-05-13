@@ -64,13 +64,15 @@ export class LogsService {
         const qsindex = logModule.indexOf('?');
         if (slashindex !== -1) logModule = logModule.slice(0, slashindex);
         if (qsindex !== -1) logModule = logModule.slice(0, qsindex);
-        const createdLog = await this.logsRepository.create({
+        const createdLog = await this.logsRepository.insert({
             ip: log.ip,
             type: log.type,
             discription: log.discription,
-            Module: logModule,
-            updatedFields: log.updatedFields,
-            user: userinfo
-        }).save();
+            Module: log.module,
+            updatedFields: log.updatedFields as any,
+            user: userinfo,
+            userAgent: log.userAgent,
+            duration: log.duration
+        });
     }
 }

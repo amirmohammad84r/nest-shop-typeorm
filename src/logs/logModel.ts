@@ -4,5 +4,7 @@ export interface LogModel {
     discription: string,
     module: string,
     updatedFields?: string
-    userid: string
+    userid: string,
+    duration: string,
+    userAgent: string
 }

@@ -36,6 +36,8 @@ export class LoggingInterceptor implements NestInterceptor {
               module: url,
               updatedFields: req.changes,
               discription: `request ${method} to ${url}`,
+              duration: duration.toString(),
+              userAgent: req.headers['user-agent']
             }
             if (process.env.NODE_ENV !== 'test') {
               await this.logService.createLog(log)
@@ -47,12 +49,13 @@ export class LoggingInterceptor implements NestInterceptor {
               userid: req.user.id,
               module: url,
               discription: `request ${method} to ${url}`,
+              duration: duration.toString(),
+              userAgent: req.headers['user-agent']
             }
             if (process.env.NODE_ENV !== 'test') {
               await this.logService.createLog(log)
             }
           }
-          console.log(url)
         }
       }),
     );

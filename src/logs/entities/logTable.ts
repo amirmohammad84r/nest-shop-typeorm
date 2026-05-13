@@ -4,7 +4,6 @@ import {
     PrimaryGeneratedColumn,
     Column,
     BaseEntity,
-    ManyToMany,
     ManyToOne,
     CreateDateColumn
 } from 'typeorm';
@@ -22,6 +21,12 @@ export class Logs extends BaseEntity {
 
     @Column()
     discription: string;
+
+    @Column({ nullable: true })
+    userAgent: string;
+
+    @Column({ nullable: true })
+    duration: string;
 
     @Column()
     Module: string;
