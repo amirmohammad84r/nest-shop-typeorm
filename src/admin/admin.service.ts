@@ -16,6 +16,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { exec } from 'child_process';
 import { restoreDTO } from './DTO/restoreDBDTO';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class AdminService {
@@ -106,12 +107,18 @@ export class AdminService {
     });
   }
 
-  async createBackUp() {
-    if (!fs.existsSync(this.manual)) return [];
+  @Cron('* * */6 * * *')
+  async autoBackup() {
+    await this.createBackUp('auto');
+  }
 
-    const files = fs.readdirSync(this.manual)
+
+  async createBackUp(type: 'manual' | 'auto') {
+    if (!fs.existsSync(type === 'manual' ? this.manual : this.auto)) return [];
+
+    const files = fs.readdirSync(type === 'manual' ? this.manual : this.auto)
       .map(file => {
-        const fullPath = path.join(this.manual, file);
+        const fullPath = path.join(type === 'manual' ? this.manual : this.auto, file);
         const stat = fs.statSync(fullPath);
 
         return {
@@ -129,7 +136,7 @@ export class AdminService {
       `backup-${Date.now()}.sql`;
 
     const fullPath = path.join(
-      this.manual,
+      type === 'manual' ? this.manual : this.auto,
       fileName,
     );
     const command = `docker exec shop-postgres pg_dump -U ${process.env.DB_USER} ${process.env.DB_NAME}`;

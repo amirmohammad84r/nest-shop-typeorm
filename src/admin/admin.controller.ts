@@ -24,7 +24,7 @@ export class AdminController {
   @Post('backup')
   @ApiOperation({ summary: 'make a backup (admin only)' })
   async createBackup() {
-    return await this.adminService.createBackUp()
+    return await this.adminService.createBackUp('manual')
   }
 
   @Post('restore')

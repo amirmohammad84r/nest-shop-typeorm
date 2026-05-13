@@ -23,9 +23,10 @@ import { CommonModule } from './common/common.module';
 import { RedisModule } from './redis/redis.module';
 import { ConfigModule } from '@nestjs/config';
 import { RabbitmqModule } from './rabbitqm/rabbitqm.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
-  imports: [
+  imports: [ScheduleModule.forRoot(),
     AuthModule,
     UserModule,
     CategoriesModule,
@@ -37,14 +38,14 @@ import { RabbitmqModule } from './rabbitqm/rabbitqm.module';
     PaymentsModule,
     CommentsModule,
     AdminModule,
-    TypeOrmModule.forRoot(AppDataSource.options),
+  TypeOrmModule.forRoot(AppDataSource.options),
     LogsModule,
     CommonModule,
     RedisModule,
     RabbitmqModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-    })
+  ConfigModule.forRoot({
+    isGlobal: true,
+  })
   ],
   controllers: [AppController],
   providers: [
