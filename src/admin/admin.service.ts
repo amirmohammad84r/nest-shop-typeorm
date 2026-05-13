@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { UserRepository } from 'src/user/repositories/userRepository';
 import { CategoryRepository } from 'src/categories/repositories/categoryRepository';
 import { ProductRepository } from 'src/products/repositories/productRepository';
@@ -12,9 +12,26 @@ import { PermitionsReposotory } from 'src/user/repositories/permitionRepository'
 import { CreatePermitionDto } from 'src/user/dto/create.permitionDTO';
 import { AddPermition } from 'src/user/dto/addPermitionToUser.DTO';
 import { RoleRepository } from 'src/user/repositories/roleRepository';
+import * as fs from 'fs';
+import * as path from 'path';
+import { exec } from 'child_process';
+import { restoreDTO } from './DTO/restoreDBDTO';
 
 @Injectable()
 export class AdminService {
+  private backupPath = path.join(
+    process.cwd(),
+    'backups',
+  );
+  private manual = path.join(
+    process.cwd(),
+    'backups/manual',
+  );
+  private auto = path.join(
+    process.cwd(),
+    'backups/auto',
+  );
+
   constructor(
     private readonly userRepo: UserRepository,
     private readonly categoryRepo: CategoryRepository,
@@ -27,7 +44,114 @@ export class AdminService {
     private readonly commentRepo: CommentsRepository,
     private readonly permitionRepo: PermitionsReposotory,
     private readonly roleRepo: RoleRepository
-  ) { }
+
+  ) {
+    if (!fs.existsSync(this.backupPath)) {
+      fs.mkdirSync(this.backupPath);
+    }
+    if (!fs.existsSync(this.manual)) {
+      fs.mkdirSync(this.manual);
+    }
+    if (!fs.existsSync(this.auto)) {
+      fs.mkdirSync(this.auto);
+    }
+  }
+  async getAllBackups(type: 'manual' | 'auto') {
+    const files = fs.readdirSync(type === 'manual' ? this.manual : this.auto).map(file => {
+      const fullPath = path.join(type === 'manual' ? this.manual : this.auto, file);
+      const stat = fs.statSync(fullPath);
+      return {
+        file,
+        createdAt: stat.birthtime,
+        path: fullPath,
+      };
+    })
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+
+    return {
+      message: 'all backups recieved',
+      detail: files,
+      count: files.length
+    }
+  }
+
+
+
+  async restoreBackUp(data: restoreDTO) {
+    const fullPath = path.join(data.type === 'manual' ? this.manual : this.auto, data.file);
+    if (!fs.existsSync(fullPath)) throw new BadRequestException('Backup file not found');
+    const copyCommand = `docker cp "${fullPath.replace(/\\/g, '/')}" shop-postgres:/tmp/${data.file}`;
+    const resetCommand = `docker exec -i shop-postgres psql -U ${process.env.DB_USER} -d ${process.env.DB_NAME} -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"`;
+    const restoreCommand = `docker exec -i shop-postgres psql -U ${process.env.DB_USER} -d ${process.env.DB_NAME} -f /tmp/${data.file}`;
+    return new Promise((resolve, reject) => {
+      exec(copyCommand, (copyError, copyStdout, copyStderr) => {
+        if (copyError) {
+          return reject(copyError);
+        }
+        exec(resetCommand, (resetError, resetStdout, resetStderr) => {
+          if (resetError) {
+            return reject(resetError);
+          }
+          exec(restoreCommand, (restoreError, restoreStdout, restoreStderr) => {
+            if (restoreError) {
+              return reject(restoreError);
+            }
+            resolve({
+              success: true,
+              restored: data.file,
+            });
+          });
+        });
+      });
+    });
+  }
+
+  async createBackUp() {
+    if (!fs.existsSync(this.manual)) return [];
+
+    const files = fs.readdirSync(this.manual)
+      .map(file => {
+        const fullPath = path.join(this.manual, file);
+        const stat = fs.statSync(fullPath);
+
+        return {
+          file,
+          createdAt: stat.birthtime,
+          path: fullPath,
+        };
+      })
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
+    if (files.length === 10) {
+      fs.unlinkSync(files[files.length - 1].path);
+    }
+    const fileName =
+      `backup-${Date.now()}.sql`;
+
+    const fullPath = path.join(
+      this.manual,
+      fileName,
+    );
+    const command = `docker exec shop-postgres pg_dump -U ${process.env.DB_USER} ${process.env.DB_NAME}`;
+    return new Promise((resolve, reject) => {
+      exec(command, (error, stdout, stderr) => {
+
+        if (error) {
+          console.error(stderr);
+          return reject(
+            new InternalServerErrorException('Backup failed'),
+          );
+        }
+        fs.writeFileSync(fullPath, stdout);
+        resolve({
+          success: true,
+          file: fileName,
+        });
+      });
+
+    });
+  }
+
 
   async changeRoleOfUser(uesrid: string, roleid: CreatePermitionDto) {
     const role = await this.roleRepo.findByTitle(roleid.title)

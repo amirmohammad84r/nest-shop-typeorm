@@ -1,8 +1,10 @@
-import { Controller, Get, Param, Delete, Post, Body, Patch, Put } from '@nestjs/common';
+import { Controller, Get, Param, Delete, Post, Body, Patch, ParseEnumPipe } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
 import { CreatePermitionDto } from 'src/user/dto/create.permitionDTO';
 import { AddPermition } from 'src/user/dto/addPermitionToUser.DTO';
+import { BackupType, restoreDTO } from './DTO/restoreDBDTO';
+
 
 @ApiTags('admin')
 @ApiBearerAuth()
@@ -10,8 +12,33 @@ import { AddPermition } from 'src/user/dto/addPermitionToUser.DTO';
 export class AdminController {
   constructor(private readonly adminService: AdminService) { }
 
+
+  //backup nd restore
+  @Get('backups/:type')
+  @ApiOperation({ summary: 'get all backups (admin only)' })
+  getAllBackups(@Param('type', new ParseEnumPipe(BackupType))
+  type: BackupType) {
+    return this.adminService.getAllBackups(type)
+  }
+
+  @Post('backup')
+  @ApiOperation({ summary: 'make a backup (admin only)' })
+  async createBackup() {
+    return await this.adminService.createBackUp()
+  }
+
+  @Post('restore')
+  @ApiOperation({ summary: 'restore (admin only)' })
+  restoreBackUp(@Body() data: restoreDTO) {
+    return this.adminService.restoreBackUp(data)
+  }
+
+
+
+
+  //asigne role to user
   @Patch('changerole/:id')
-  @ApiOperation({ summary: 'Get user by id (admin only)' })
+  @ApiOperation({ summary: 'change user role (admin only)' })
   @ApiParam({ name: 'id', description: 'User ID' })
   changeUserRoleById(@Param('id') userid: string, @Body() roleid: CreatePermitionDto) {
     return this.adminService.changeRoleOfUser(userid, roleid)
@@ -19,20 +46,20 @@ export class AdminController {
 
   //roles
   @Get('roles')
-  @ApiOperation({ summary: 'get all roles' })
+  @ApiOperation({ summary: 'get all roles (admin only)' })
   getAllRoles() {
     return this.adminService.findAllRoles()
   }
 
   @Post('roles')
-  @ApiOperation({ summary: 'create a new role' })
+  @ApiOperation({ summary: 'create a new role (admin only)' })
   createRole(@Body() roleDTO: CreatePermitionDto) {
     return this.adminService.createRole(roleDTO)
   }
 
   @Delete('roles/:id')
-  @ApiOperation({ summary: 'delete a role' })
-  deleteARole(@Param() id: string) {
+  @ApiOperation({ summary: 'delete a role (admin only)' })
+  deleteARole(@Param('id') id: string) {
     return this.adminService.deleteRole(id)
   }
 
