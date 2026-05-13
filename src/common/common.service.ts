@@ -47,21 +47,4 @@ export class CommonService {
         });
         return resault
     }
-
-
-    // gregoryToJalali(date: Date) {
-
-    //     return new Date(dayjs(date)
-    //         .calendar("jalali")
-    //         .format("YYYY/MM/DD HH:mm:ss"))
-
-    // }
-    // jalaliToGregory(date: Date) {
-
-    //     return new Date(dayjs(date, { jalali: true })
-    //         .calendar("jalali")
-    //         .format("YYYY/MM/DD HH:mm:ss"))
-
-    // }
-
 }
