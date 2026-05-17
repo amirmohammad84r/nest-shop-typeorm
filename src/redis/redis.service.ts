@@ -76,7 +76,6 @@ export class RedisService implements OnModuleInit {
             this.isRedisAvailable = false
             throw new InternalServerErrorException("our service is not avaible")
         }
-
     }
 
     async del(key: string) {

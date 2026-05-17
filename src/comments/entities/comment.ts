@@ -9,8 +9,6 @@ import {
 } from 'typeorm';
 import { User } from 'src/user/entities/user';
 import { Product } from 'src/products/entities/product';
-// import { OrderItem } from 'src/order-items/entities/order-item';
-// import { Payment } from 'src/payments/entities/payment';
 
 @Entity('comments')
 export class Comments extends BaseEntity {
@@ -32,7 +30,6 @@ export class Comments extends BaseEntity {
   @Column()
   comment: string;
 
-  // Relations
   @ManyToOne(() => User, (user) => user.comment, { onDelete: 'CASCADE' })
   user: User;
 

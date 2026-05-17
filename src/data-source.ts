@@ -14,6 +14,7 @@ import { Permitions } from './user/entities/permitions';
 import { RolesTable } from './user/entities/role';
 import { Logs } from './logs/entities/logTable';
 import * as dotenv from 'dotenv';
+import { LogConfig } from './logs/entities/logConfig';
 dotenv.config();
 
 const isTest = process.env.NODE_ENV === 'test';
@@ -54,6 +55,7 @@ export const AppDataSource = new DataSource(
       Permitions,
       RolesTable,
       Logs,
+      LogConfig
     ],
 
   });

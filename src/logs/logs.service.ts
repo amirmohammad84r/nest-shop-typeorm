@@ -1,17 +1,22 @@
-import { BadRequestException, Injectable, Ip, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { LogsRepository } from './repositories/logRepository';
 import { LogModel } from './logModel';
 import { UserRepository } from 'src/user/repositories/userRepository';
 import { Between, In, Like } from 'typeorm';
 import { CommonService } from 'src/common/common.service';
 import moment from 'moment-jalaali';
+import { ConfigLogDTO } from './DTOs/configLogDTO';
+import { LogConfigRepository } from './repositories/logConfigRepository';
+import { isArray, isEmpty } from 'class-validator';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class LogsService {
     constructor(
         private readonly logsRepository: LogsRepository,
         private readonly userRepository: UserRepository,
-        private readonly common: CommonService
+        private readonly common: CommonService,
+        private readonly logConfigRepository: LogConfigRepository
     ) {
         moment.loadPersian();
     }
@@ -74,5 +79,24 @@ export class LogsService {
             userAgent: log.userAgent,
             duration: log.duration
         });
+    }
+
+    async configLog(config: ConfigLogDTO) {
+        const preConfig = await this.logConfigRepository.findLogsConfig();
+        if (preConfig.length >= 0) await this.logConfigRepository.deleteAll();
+        if (config.type === 'item') await this.logConfigRepository.insert({ maxlogs: config.secound as string | undefined })
+        else await this.logConfigRepository.insert({ retentiondays: config.secound as string | undefined })
+        return {
+            message: 'Logs Configures succesfully'
+        }
+    }
+
+    @Cron('* * * */6 * *')
+    async deleteLogs() {
+        const preConfig = await this.logConfigRepository.findLogsConfig();
+        if (preConfig.length >= 0) {
+            if (preConfig[0].maxlogs) await this.logsRepository.deleteLogsByMaxItem(preConfig[0].maxlogs);
+            else await this.logsRepository.deleteLogsByDate(preConfig[0].retentiondays);
+        }
     }
 }

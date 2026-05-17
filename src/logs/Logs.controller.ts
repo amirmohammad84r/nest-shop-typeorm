@@ -1,8 +1,9 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LogsService } from './logs.service';
-import { Permission, Roles } from 'src/auth/decorators';
+import { Permission, Public, Roles } from 'src/auth/decorators';
 import { LogDTO } from './DTOs/logIpDTO';
+import { ConfigLogDTO } from './DTOs/configLogDTO';
 
 @ApiTags('logs')
 @ApiBearerAuth()
@@ -44,4 +45,10 @@ export class CommonController {
         return await this.logService.findAllLogs(data.IP, data.type, data.user, data.dateStart, data.dateEnd, data.module)
     }
 
+    @Post()
+    @ApiOperation({ summary: 'config log' })
+    @ApiResponse({ status: 201, description: 'config log create' })
+    async configLog(@Body() config: ConfigLogDTO) {
+        return await this.logService.configLog(config)
+    }
 }

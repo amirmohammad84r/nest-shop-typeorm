@@ -12,6 +12,27 @@ export class LogsRepository extends Repository<Logs> {
             where: [
                 where
             ], relations: ['user']
-        })
+        });
     }
+    async deleteLogsByMaxItem(maxItem: string) {
+        return await this.query(
+            `
+    DELETE FROM logs
+    WHERE id IN (
+      SELECT id
+      FROM logs
+      ORDER BY "createdAt" DESC
+      OFFSET ${maxItem}
+    );
+    `);
+    }
+
+    async deleteLogsByDate(days: string) {
+        return await this.query(
+            `
+    DELETE FROM logs
+    WHERE "createdAt" < NOW() - (${days} * INTERVAL '1 days');
+    `);
+    }
+
 }
