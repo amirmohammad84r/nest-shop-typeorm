@@ -17,6 +17,7 @@ import * as path from 'path';
 import { exec } from 'child_process';
 import { restoreDTO } from './DTO/restoreDBDTO';
 import { Cron } from '@nestjs/schedule';
+import { add } from 'node-7z';
 
 @Injectable()
 export class AdminService {
@@ -45,7 +46,6 @@ export class AdminService {
     private readonly commentRepo: CommentsRepository,
     private readonly permitionRepo: PermitionsReposotory,
     private readonly roleRepo: RoleRepository
-
   ) {
     if (!fs.existsSync(this.backupPath)) {
       fs.mkdirSync(this.backupPath);
@@ -68,7 +68,6 @@ export class AdminService {
       };
     })
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-
     return {
       message: 'all backups recieved',
       detail: files,
@@ -79,27 +78,49 @@ export class AdminService {
 
 
   async restoreBackUp(data: restoreDTO) {
-    const fullPath = path.join(data.type === 'manual' ? this.manual : this.auto, data.file);
-    if (!fs.existsSync(fullPath)) throw new BadRequestException('Backup file not found');
-    const copyCommand = `docker cp "${fullPath.replace(/\\/g, '/')}" shop-postgres:/tmp/${data.file}`;
+    const fullPath = path.join(data.type === 'manual' ? this.manual : this.auto, data.file,);
+    if (!fs.existsSync(fullPath)) {
+      throw new BadRequestException(
+        'Backup file not found',
+      );
+    }
+    const extractedSqlPath = fullPath.replace('.zip', '.sql');
+    const extractCommand = `7z e "${fullPath}" -o"${fullPath.replace(data.file, "")}" -p${process.env.BACKUP_PASS}`;
+    const copyCommand = `docker cp "${extractedSqlPath}" shop-postgres:/tmp/restore.sql`;
     const resetCommand = `docker exec -i shop-postgres psql -U ${process.env.DB_USER} -d ${process.env.DB_NAME} -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"`;
-    const restoreCommand = `docker exec -i shop-postgres psql -U ${process.env.DB_USER} -d ${process.env.DB_NAME} -f /tmp/${data.file}`;
+    const restoreCommand = `docker exec -i shop-postgres psql -U ${process.env.DB_USER} -d ${process.env.DB_NAME} -f /tmp/restore.sql`;
     return new Promise((resolve, reject) => {
-      exec(copyCommand, (copyError, copyStdout, copyStderr) => {
-        if (copyError) {
-          return reject(copyError);
+      exec(extractCommand, (extractError) => {
+        if (extractError) {
+          return reject(
+            new InternalServerErrorException(
+              'Extract failed',
+            ),
+          );
         }
-        exec(resetCommand, (resetError, resetStdout, resetStderr) => {
-          if (resetError) {
-            return reject(resetError);
+        exec(copyCommand, (copyError) => {
+          if (copyError) {
+            return reject(
+              new InternalServerErrorException(
+                'copy failed',
+              ),
+            );
           }
-          exec(restoreCommand, (restoreError, restoreStdout, restoreStderr) => {
-            if (restoreError) {
-              return reject(restoreError);
+          exec(resetCommand, (resetError) => {
+            if (resetError) {
+              return reject(resetError);
             }
-            resolve({
-              success: true,
-              restored: data.file,
+            exec(restoreCommand, (restoreError) => {
+              if (restoreError) {
+                return reject(restoreError);
+              }
+              if (fs.existsSync(extractedSqlPath)) {
+                fs.unlinkSync(extractedSqlPath);
+              }
+              resolve({
+                success: true,
+                restored: data.file,
+              });
             });
           });
         });
@@ -107,7 +128,7 @@ export class AdminService {
     });
   }
 
-  @Cron('* * */6 * * *')
+  @Cron('* * * */4 * *')
   async autoBackup() {
     await this.createBackUp('auto');
   }
@@ -129,35 +150,53 @@ export class AdminService {
       })
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
-    if (files.length === 10) {
+    if (files.length >= 10) {
       fs.unlinkSync(files[files.length - 1].path);
     }
-    const fileName =
-      `backup-${Date.now()}.sql`;
+    const fileName = `backup-${Date.now()}`;
 
     const fullPath = path.join(
       type === 'manual' ? this.manual : this.auto,
       fileName,
     );
     const command = `docker exec shop-postgres pg_dump -U ${process.env.DB_USER} ${process.env.DB_NAME}`;
+    const archive = `7z a "${fullPath}".zip "${fullPath}".sql -p${process.env.BACKUP_PASS}`;
     return new Promise((resolve, reject) => {
+
       exec(command, (error, stdout, stderr) => {
 
         if (error) {
           console.error(stderr);
+
           return reject(
             new InternalServerErrorException('Backup failed'),
           );
         }
-        fs.writeFileSync(fullPath, stdout);
-        resolve({
-          success: true,
-          file: fileName,
+
+        fs.writeFileSync(`${fullPath}.sql`, stdout);
+
+        exec(archive, (zipError, zipStdout, zipStderr) => {
+          if (zipError) {
+            console.error(zipStderr);
+            return reject(
+              new InternalServerErrorException(
+                'Backup encryption failed',
+              ),
+            );
+          }
+          fs.unlinkSync(`${fullPath}.sql`);
+          resolve({
+            success: true,
+            file: `${fileName}.zip`,
+          });
+
         });
+
       });
 
     });
   }
+
 
 
   async changeRoleOfUser(uesrid: string, roleid: CreatePermitionDto) {

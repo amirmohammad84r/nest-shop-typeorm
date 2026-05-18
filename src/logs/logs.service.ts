@@ -7,7 +7,6 @@ import { CommonService } from 'src/common/common.service';
 import moment from 'moment-jalaali';
 import { ConfigLogDTO } from './DTOs/configLogDTO';
 import { LogConfigRepository } from './repositories/logConfigRepository';
-import { isArray, isEmpty } from 'class-validator';
 import { Cron } from '@nestjs/schedule';
 
 @Injectable()

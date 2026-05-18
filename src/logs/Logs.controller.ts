@@ -51,4 +51,11 @@ export class CommonController {
     async configLog(@Body() config: ConfigLogDTO) {
         return await this.logService.configLog(config)
     }
+
+    @Public()
+    @Get('csv')
+    @ApiOperation({ summary: 'get logs csv file' })
+    async getLogCSV() {
+
+    }
 }
